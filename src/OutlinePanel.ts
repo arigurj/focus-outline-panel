@@ -8,6 +8,12 @@ interface HeadingItem {
   children: HeadingItem[];
 }
 
+interface CodeMirror6Editor {
+  cm?: {
+    dom: HTMLElement;
+  };
+}
+
 export class OutlinePanel {
   private app: App;
   private plugin: FocusOutlinePlugin;
@@ -52,17 +58,23 @@ export class OutlinePanel {
 
     const pos = this.plugin.settings.position;
     const size = this.plugin.settings.size;
-    this.container.style.width = `${size.width}px`;
-    this.container.style.height = `${size.height}px`;
 
     if (pos.left < 0) {
-      this.container.style.top = `${pos.top}px`;
-      this.container.style.right = '20px';
-      this.container.style.left = 'auto';
+      this.container.setCssStyles({
+        top: `${pos.top}px`,
+        right: '20px',
+        left: 'auto',
+        width: `${size.width}px`,
+        height: `${size.height}px`,
+      });
     } else {
-      this.container.style.top = `${pos.top}px`;
-      this.container.style.left = `${pos.left}px`;
-      this.container.style.right = 'auto';
+      this.container.setCssStyles({
+        top: `${pos.top}px`,
+        left: `${pos.left}px`,
+        right: 'auto',
+        width: `${size.width}px`,
+        height: `${size.height}px`,
+      });
     }
 
     const header = this.container.createDiv({ cls: 'focus-outline-header' });
@@ -76,7 +88,7 @@ export class OutlinePanel {
     this.createResizeHandles();
     this.setupResizeHandlers();
 
-    this.render();
+    void this.render();
     this.attachScrollHandler();
     this.setupIntersectionObserver();
   }
@@ -96,16 +108,18 @@ export class OutlinePanel {
     if (!this.container) return;
     this.plugin.settings.position = { left: -1, top: 60 };
     this.plugin.settings.size = { width: 260, height: 400 };
-    this.plugin.saveSettings();
+    void this.plugin.saveSettings();
 
-    this.container.style.top = '60px';
-    this.container.style.right = '20px';
-    this.container.style.left = 'auto';
-    this.container.style.width = '260px';
-    this.container.style.height = '400px';
+    this.container.setCssStyles({
+      top: '60px',
+      right: '20px',
+      left: 'auto',
+      width: '260px',
+      height: '400px',
+    });
   }
 
-  render() {
+  async render(): Promise<void> {
     if (!this.contentEl) return;
     this.contentEl.empty();
 
@@ -167,7 +181,7 @@ export class OutlinePanel {
       });
 
       const indent = (item.level - this.plugin.settings.minLevel) * 12;
-      row.style.paddingLeft = `${indent}px`;
+      row.setCssStyles({ paddingLeft: `${indent}px` });
 
       const isCollapsed = this.plugin.isCollapsed(item.line);
 
@@ -177,7 +191,7 @@ export class OutlinePanel {
         toggle.addEventListener('click', (e) => {
           e.stopPropagation();
           this.plugin.setCollapsed(item.line, !isCollapsed);
-          this.render();
+          void this.render();
         });
       }
 
@@ -268,9 +282,9 @@ export class OutlinePanel {
     const view = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (!view?.editor) return;
 
-    const editor = view.editor;
-    const scroller = (editor as any).cm?.dom?.querySelector?.('.cm-scroller') as HTMLElement | null
-      || (editor as any).cm?.dom as HTMLElement | null;
+    const cmEditor = view.editor as unknown as CodeMirror6Editor;
+    const scroller = cmEditor.cm?.dom?.querySelector('.cm-scroller') as HTMLElement | null
+      || cmEditor.cm?.dom as HTMLElement | null;
 
     if (!scroller) return;
 
@@ -286,9 +300,9 @@ export class OutlinePanel {
     if (this.scrollHandler) {
       const view = this.app.workspace.getActiveViewOfType(MarkdownView);
       if (view?.editor) {
-        const editor = view.editor;
-        const scroller = (editor as any).cm?.dom?.querySelector?.('.cm-scroller') as HTMLElement | null
-          || (editor as any).cm?.dom as HTMLElement | null;
+        const cmEditor = view.editor as unknown as CodeMirror6Editor;
+        const scroller = cmEditor.cm?.dom?.querySelector('.cm-scroller') as HTMLElement | null
+          || cmEditor.cm?.dom as HTMLElement | null;
         if (scroller) {
           scroller.removeEventListener('scroll', this.scrollHandler);
         }
@@ -332,7 +346,7 @@ export class OutlinePanel {
         const line = this.findLineForHeading(h.textContent || '');
         if (line >= 0) {
           (h as HTMLElement).dataset.line = String(line);
-          this.observer!.observe(h);
+          this.observer?.observe(h);
         }
       }
     });
@@ -364,13 +378,14 @@ export class OutlinePanel {
       const newX = e.clientX - this.dragOffsetX;
       const newY = e.clientY - this.dragOffsetY;
 
-      // Constrain: header (top 32px) must stay visible
       const constrainedX = Math.max(-this.container.offsetWidth + 60, Math.min(newX, window.innerWidth - 60));
       const constrainedY = Math.max(0, Math.min(newY, window.innerHeight - 32));
 
-      this.container.style.left = `${constrainedX}px`;
-      this.container.style.top = `${constrainedY}px`;
-      this.container.style.right = 'auto';
+      this.container.setCssStyles({
+        left: `${constrainedX}px`,
+        top: `${constrainedY}px`,
+        right: 'auto',
+      });
     };
 
     this.onDragEnd = () => {
@@ -382,7 +397,7 @@ export class OutlinePanel {
         left: rect.left,
         top: rect.top,
       };
-      this.plugin.saveSettings();
+      void this.plugin.saveSettings();
 
       document.removeEventListener('mousemove', this.onDragMove!);
       document.removeEventListener('mouseup', this.onDragEnd!);
@@ -448,11 +463,13 @@ export class OutlinePanel {
         newTop = this.container.offsetTop + heightDelta;
       }
 
-      this.container.style.width = `${newWidth}px`;
-      this.container.style.height = `${newHeight}px`;
-      this.container.style.left = `${newLeft}px`;
-      this.container.style.top = `${newTop}px`;
-      this.container.style.right = 'auto';
+      this.container.setCssStyles({
+        width: `${newWidth}px`,
+        height: `${newHeight}px`,
+        left: `${newLeft}px`,
+        top: `${newTop}px`,
+        right: 'auto',
+      });
     };
 
     this.onResizeEnd = () => {
@@ -469,7 +486,7 @@ export class OutlinePanel {
         left: rect.left,
         top: rect.top,
       };
-      this.plugin.saveSettings();
+      void this.plugin.saveSettings();
 
       document.removeEventListener('mousemove', this.onResizeMove!);
       document.removeEventListener('mouseup', this.onResizeEnd!);

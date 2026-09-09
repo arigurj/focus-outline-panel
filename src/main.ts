@@ -1,4 +1,4 @@
-import { Plugin, MarkdownView, debounce } from 'obsidian';
+import { Plugin } from 'obsidian';
 import { FocusOutlineSettingTab, FocusOutlineSettings, DEFAULT_SETTINGS } from './settings';
 import { OutlinePanel } from './OutlinePanel';
 
@@ -37,14 +37,14 @@ export default class FocusOutlinePlugin extends Plugin {
 
     this.registerEvent(this.app.workspace.on('active-leaf-change', () => {
       if (this.panel?.isVisible()) {
-        this.panel.render();
+        void this.panel.render();
         this.panel.attachScrollHandler();
       }
     }));
 
     this.registerEvent(this.app.workspace.on('editor-change', () => {
       if (this.panel?.isVisible()) {
-        this.panel.render();
+        void this.panel.render();
       }
     }));
   }
@@ -60,7 +60,7 @@ export default class FocusOutlinePlugin extends Plugin {
   async saveSettings() {
     await this.saveData(this.settings);
     if (this.panel?.isVisible()) {
-      this.panel.render();
+      void this.panel.render();
     }
   }
 

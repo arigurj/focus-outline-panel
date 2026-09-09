@@ -41,7 +41,7 @@ export class FocusOutlineSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl('h2', { text: 'Focus Outline Panel' });
+    new Setting(containerEl).setHeading().setName('Focus Outline Panel');
 
     new Setting(containerEl)
       .setName('Show by default')
@@ -59,7 +59,6 @@ export class FocusOutlineSettingTab extends PluginSettingTab {
       .addSlider(slider => slider
         .setLimits(1, 6, 1)
         .setValue(this.plugin.settings.minLevel)
-        .setDynamicTooltip()
         .onChange(async (value) => {
           this.plugin.settings.minLevel = value;
           if (value > this.plugin.settings.maxLevel) {
@@ -74,7 +73,6 @@ export class FocusOutlineSettingTab extends PluginSettingTab {
       .addSlider(slider => slider
         .setLimits(1, 6, 1)
         .setValue(this.plugin.settings.maxLevel)
-        .setDynamicTooltip()
         .onChange(async (value) => {
           this.plugin.settings.maxLevel = value;
           if (value < this.plugin.settings.minLevel) {
