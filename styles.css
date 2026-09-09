@@ -1,0 +1,196 @@
+/* Focus Outline Panel — floating panel styles with drag & resize */
+
+.focus-outline-floating-panel {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  width: 260px;
+  max-height: 60vh;
+  min-width: 180px;
+  min-height: 120px;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: var(--layer-popover);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.focus-outline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  flex-shrink: 0;
+  cursor: grab;
+  user-select: none;
+}
+
+.focus-outline-header:active {
+  cursor: grabbing;
+}
+
+.focus-outline-title {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.focus-outline-close {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.focus-outline-close:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.focus-outline-content {
+  padding: 8px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 40px;
+}
+
+.focus-outline-empty {
+  color: var(--text-muted);
+  padding: 16px 8px;
+  text-align: center;
+  font-style: italic;
+}
+
+.focus-outline-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.focus-outline-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+  user-select: none;
+}
+
+.focus-outline-row:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.focus-outline-row.focus-outline-active {
+  background-color: var(--background-modifier-active);
+  color: var(--text-accent);
+  font-weight: 500;
+}
+
+.focus-outline-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.focus-outline-toggle:hover {
+  color: var(--text-normal);
+  background: var(--background-modifier-hover);
+}
+
+.focus-outline-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Resize handles */
+.focus-outline-resize-handle {
+  position: absolute;
+  z-index: 10;
+}
+
+.focus-outline-resize-n {
+  top: -3px;
+  left: 8px;
+  right: 8px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.focus-outline-resize-s {
+  bottom: -3px;
+  left: 8px;
+  right: 8px;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.focus-outline-resize-e {
+  top: 8px;
+  right: -3px;
+  bottom: 8px;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.focus-outline-resize-w {
+  top: 8px;
+  left: -3px;
+  bottom: 8px;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.focus-outline-resize-ne {
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nesw-resize;
+}
+
+.focus-outline-resize-nw {
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
+}
+
+.focus-outline-resize-se {
+  bottom: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nwse-resize;
+}
+
+.focus-outline-resize-sw {
+  bottom: -4px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  cursor: nesw-resize;
+}

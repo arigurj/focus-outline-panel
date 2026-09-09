@@ -1,0 +1,10 @@
+{
+  "id": "focus-outline-panel",
+  "name": "Focus Outline Panel",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Floating sidebar panel with live outline of the current note, collapsible by levels, synced to viewport scroll position.",
+  "author": "arigurj",
+  "authorUrl": "https://github.com/arigurj",
+  "isDesktopOnly": false
+}

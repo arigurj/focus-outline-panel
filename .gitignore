@@ -1,0 +1,8 @@
+# Obsidian built-ins
+node_modules/
+.DS_Store
+
+# Build output (keep for releases)
+# main.js
+# manifest.json
+# styles.css
